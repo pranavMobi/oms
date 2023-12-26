@@ -35,7 +35,19 @@ public class Order {
     private Date orderShipmentDate;
 
     @Column(name = "SHIPPER_ID")
-    private int shipperId;
+    private Integer shipperId;
+
+	
+
+	
+
+	public void setShipperId(Integer shipperId) {
+		this.shipperId = shipperId;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
 
 	public int getOrderId() {
 		return orderId;
@@ -99,15 +111,14 @@ public class Order {
 	}
 
 	public Order(int customerId, Date orderDate, String orderStatus, String paymentMode, Date paymentDate,
-			Date orderShipmentDate, int shipperId) {
+			Date orderShipmentDate) {
 		super();
-		this.customerId = customerId;
+		
 		this.orderDate = orderDate;
 		this.orderStatus = orderStatus;
 		this.paymentMode = paymentMode;
 		this.paymentDate = paymentDate;
 		this.orderShipmentDate = orderShipmentDate;
-		this.shipperId = shipperId;
 	}
 
     
