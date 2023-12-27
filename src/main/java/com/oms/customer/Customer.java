@@ -2,11 +2,16 @@ package com.oms.customer;
 
 import java.util.Date;
 
+import com.oms.address.Address;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity(name= "online_customer")
 public class Customer {
@@ -28,8 +33,7 @@ public class Customer {
 	@Column(name = "CUSTOMER_PHONE")
 	private long customerPhone;
 
-	@Column(name = "ADDRESS_ID")
-	private int addressId;
+	
 
 	@Column(name = "CUSTOMER_CREATION_DATE")
 	private Date customerCreationDate;
@@ -39,6 +43,23 @@ public class Customer {
 
 	@Column(name = "CUSTOMER_GENDER")
 	private char customerGender;
+	
+	
+	
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ADDRESS_ID")
+    private Address address;
+
+   
+	 
+	 public Address getAddress() {
+	        return address;
+	    }
+
+	    public void setAddress(Address address) {
+	        this.address = address;
+	    }
+
 
 	public int getCustomerId() {
 		return customerId;
@@ -76,9 +97,7 @@ public class Customer {
 		this.customerPhone = customerPhone;
 	}
 
-	public int getAddressId() {
-		return addressId;
-	}
+	
 
 	public Date getCustomerCreationDate() {
 		return customerCreationDate;
