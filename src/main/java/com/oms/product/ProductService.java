@@ -1,7 +1,11 @@
 package com.oms.product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.oms.exception.ProductNotFoundException;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -14,33 +18,41 @@ public class ProductService {
     }
 
     public Product getProductById(int productId) {
-        return productRepository.findById(productId).orElse(null);
+        Optional<Product> product = productRepository.findById(productId);
+        if (product.isPresent()) {
+            return product.get();
+        } else {
+            throw new ProductNotFoundException("Product not found ");
+        }
     }
 
     public Product createProduct(Product product) {
-        // Perform any necessary validations or business logic
+        
         return productRepository.save(product);
     }
 
     public Product updateProduct(int productId, Product updatedProduct) {
-        Product existingProduct = productRepository.findById(productId).orElse(null);
-        if (existingProduct != null) {
-            // Update existingProduct with updatedProduct attributes
-            existingProduct.setProductDescription(updatedProduct.getProductDescription());
-            existingProduct.setProductClassCode(updatedProduct.getProductClassCode());
-            // Update other attributes similarly
+        Optional<Product> existingProduct = productRepository.findById(productId);
+        if (existingProduct.isPresent()) {
+            Product productToUpdate = existingProduct.get();
+       
+            productToUpdate.setProductDescription(updatedProduct.getProductDescription());
+            productToUpdate.setProductClassCode(updatedProduct.getProductClassCode());
+           
 
-            return productRepository.save(existingProduct);
+            return productRepository.save(productToUpdate);
+        } else {
+            throw new ProductNotFoundException("Product not found ");
         }
-        return null; // Or handle as needed
     }
 
     public boolean deleteProduct(int productId) {
-        Product existingProduct = productRepository.findById(productId).orElse(null);
-        if (existingProduct != null) {
-            productRepository.delete(existingProduct);
+        Optional<Product> existingProduct = productRepository.findById(productId);
+        if (existingProduct.isPresent()) {
+            productRepository.delete(existingProduct.get());
             return true;
+        } else {
+            throw new ProductNotFoundException("Product not found ");
         }
-        return false; // Or handle as needed
     }
 }
