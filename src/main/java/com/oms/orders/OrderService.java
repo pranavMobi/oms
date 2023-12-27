@@ -8,6 +8,9 @@ public class OrderService {
 
     @Autowired
     private OrderRepository orderRepository;
+    
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     // Method to get all orders for a specific customer
     public List<Order> getAllOrdersForCustomer(int customerId) {
@@ -19,12 +22,20 @@ public class OrderService {
         return orderRepository.findByCustomerIdAndOrderId(customerId, orderId);
     }
 
-    // Method to place an order for a specific customer
+    
     public Order placeOrderForCustomer(int customerId, Order order) {
-        order.setCustomerId(customerId); // Set the customer ID for the order
-        // validations 
-        return orderRepository.save(order);
-    }
+        order.setCustomerId(customerId);
 
-    // Other methods for updating, deleting, adding line items, etc. as needed
+        Order savedOrder = orderRepository.save(order);
+
+        List<OrderItem> orderItems = order.getOrderItems();
+        orderItems.forEach(item -> {
+            item.setOrderId(savedOrder.getOrderId());
+            item.setOrder(savedOrder); // Set the saved Order instance for each OrderItem
+        });
+
+        orderItemRepository.saveAll(orderItems);
+
+        return savedOrder;
+    }
 }

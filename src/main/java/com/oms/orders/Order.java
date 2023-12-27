@@ -1,12 +1,16 @@
 package com.oms.orders;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity(name = "order_header")
 public class Order {
@@ -36,9 +40,17 @@ public class Order {
 
     @Column(name = "SHIPPER_ID")
     private Integer shipperId;
+    
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
+    
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
 
-	
-
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
 	
 
 	public void setShipperId(Integer shipperId) {
